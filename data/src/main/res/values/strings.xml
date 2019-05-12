@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Data</string>
+    <string name="server_error">server error</string>
+    <string name="error_code">error code:</string>
+    <string name="bad_request">bad request</string>
+    <string name="forbidden">Forbidden</string>
+    <string name="not_found">Not Found</string>
+    <string name="time_out">Request Time Out</string>
+    <string name="gone">Gone</string>
+    <string name="internal_server_error">Internal Server Error</string>
+    <string name="bad_gateway">Bad Gateway</string>
+    <string name="gateway_time_out">Gateway Time Out</string>
+</resources>

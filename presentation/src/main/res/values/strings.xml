@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CarShow</string>
+    <string name="retry">Retry</string>
+    <string name="all_manufactures">Manufactures</string>
+    <string name="dialog_title_manufacture">Manufacture:\u0020</string>
+    <string name="dialog_message_available_model">Available model:\u0020</string>
+    <string name="dialog_message_made_in">Made in:\u0020</string>
+</resources>
