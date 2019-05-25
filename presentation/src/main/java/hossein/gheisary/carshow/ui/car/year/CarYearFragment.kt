@@ -27,8 +27,6 @@ class CarYearFragment:BaseFragment() {
         fun newInstance(args: Bundle) =  CarYearFragment().apply { arguments = args }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var carYearViewModel: CarYearViewModel
 
     lateinit var carYearAdapter : CarYearAdapter

@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import hossein.gheisary.carshow.R
 import hossein.gheisary.carshow.base.BaseFragment
 import hossein.gheisary.carshow.ui.main.MainActivity
 import hossein.gheisary.carshow.ui.main.MainNavigator
+import hossein.gheisary.carshow.utility.extensions.createViewModel
+import hossein.gheisary.carshow.utility.extensions.observe
 import hossein.gheisary.data.remote.core.NetworkState
 import kotlinx.android.synthetic.main.fragment_manufacture.*
-import javax.inject.Inject
 
 class ManufactureFragment:BaseFragment() {
     companion object {
@@ -25,12 +23,7 @@ class ManufactureFragment:BaseFragment() {
 
     private lateinit var adapter: ManufactureAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val mainViewModel: ManufactureViewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory).get(ManufactureViewModel::class.java)
-    }
+    private lateinit var viewModel: ManufactureViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return View.inflate(context, R.layout.fragment_manufacture, null)
@@ -44,13 +37,14 @@ class ManufactureFragment:BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = createViewModel(viewModelFactory)
         setupList()
         initObservers()
 
-        if(mainViewModel.carManufactures!=null){
-            updateList(mainViewModel.carManufactures)
+        if(viewModel.carManufactures!=null){
+            updateList(viewModel.carManufactures)
         }else{
-            mainViewModel.getData()
+            viewModel.getData()
         }
     }
 
@@ -58,7 +52,7 @@ class ManufactureFragment:BaseFragment() {
         val linearLayoutManager =  LinearLayoutManager(mActivity)
         manufacturesRecyclerView.layoutManager = linearLayoutManager
         manufacturesRecyclerView.setHasFixedSize(true)
-        adapter = ManufactureAdapter( mainViewModel::retry, this::onItemClicked )
+        adapter = ManufactureAdapter( viewModel::retry, this::onItemClicked )
         manufacturesRecyclerView.adapter = adapter
     }
 
@@ -68,20 +62,23 @@ class ManufactureFragment:BaseFragment() {
     }
 
     private fun initObservers() {
-        mainViewModel.items.observe(this, Observer<PagedList<ManufactureUiModel>> { updateList(it)})
-        mainViewModel.networkState.observe(this, Observer { adapter.setNetworkState(it) })
+        observe(viewModel.items, ::updateList)
+        observe(viewModel.networkState, ::setNetworkState)
+        observe(viewModel.refreshState, ::setRefreshState)
 
-        mainViewModel.refreshState.observe(this, Observer {
-            if(it==NetworkState.LOADED) manufactureListSwipeRefreshLayout.isRefreshing = false
-        })
-
-        manufactureListSwipeRefreshLayout.setOnRefreshListener { mainViewModel.refresh() }
+        manufactureListSwipeRefreshLayout.setOnRefreshListener { viewModel.refresh() }
     }
 
     private fun updateList(it: PagedList<ManufactureUiModel>?) {
-        mainViewModel.carManufactures = it
-        adapter.submitList(mainViewModel.carManufactures)
+        viewModel.carManufactures = it
+        adapter.submitList(viewModel.carManufactures)
     }
 
+    private fun setNetworkState(newNetworkState: NetworkState?){
+        adapter.setNetworkState(newNetworkState)
+    }
+    private fun setRefreshState(newNetworkState: NetworkState?){
+        if(newNetworkState==NetworkState.LOADED) manufactureListSwipeRefreshLayout.isRefreshing = false
+    }
 
 }

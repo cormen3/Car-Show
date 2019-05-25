@@ -12,6 +12,7 @@ import hossein.gheisary.carshow.ui.car.year.CarYearFragment
 import hossein.gheisary.carshow.ui.car.year.CarYearFragment.Companion.ARG_FRAGMENT_CAR_YEAR_CAR_TYPE
 import hossein.gheisary.carshow.ui.car.year.CarYearFragment.Companion.ARG_FRAGMENT_CAR_YEAR_MANUFACTURE_ID
 import hossein.gheisary.carshow.ui.car.year.CarYearFragment.Companion.ARG_FRAGMENT_CAR_YEAR_MANUFACTURE_NAME
+import hossein.gheisary.carshow.utility.extensions.inTransaction
 
 class MainNavigator (activity: AppCompatActivity){
     private var fragmentManager: FragmentManager = activity.supportFragmentManager
@@ -33,11 +34,9 @@ class MainNavigator (activity: AppCompatActivity){
         val fragment = CarTypeFragment.newInstance(args)
         val tag = fragment.javaClass.toString()
 
-        fragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left,R.anim.slide_out_right)
-            .replace(R.id.mainFragmentContainer, fragment, tag)
-            .addToBackStack(tag)
-            .commit()
+        fragmentManager.inTransaction {
+            replace(R.id.mainFragmentContainer, fragment, tag)
+        }
     }
 
     fun navigateToCarYearFragment(manufactureId: String?, manufactureName: String?, carType: String) {
@@ -49,10 +48,8 @@ class MainNavigator (activity: AppCompatActivity){
         val fragment = CarYearFragment.newInstance(args)
         val tag = fragment.javaClass.toString()
 
-        fragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left,R.anim.slide_out_right)
-            .replace(R.id.mainFragmentContainer, fragment, tag)
-            .addToBackStack(tag)
-            .commit()
+        fragmentManager.inTransaction {
+            replace(R.id.mainFragmentContainer, fragment, tag)
+        }
     }
 }

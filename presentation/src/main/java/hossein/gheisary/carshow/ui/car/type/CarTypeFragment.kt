@@ -27,8 +27,6 @@ class CarTypeFragment:BaseFragment() {
 
     private lateinit var adapter: CarTypeAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var carTypeViewModel: CarTypeViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
